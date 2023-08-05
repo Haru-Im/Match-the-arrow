@@ -13,7 +13,6 @@ module.exports = {
   rules: {
     'unused-imports/no-unused-imports-ts': 'error',
     'react/react-in-jsx-scope': 'off',
-    'unused-imports/no-unused-imports-ts': 'error',
   },
   settings: {
     react: {
