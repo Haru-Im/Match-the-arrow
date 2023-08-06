@@ -3,5 +3,5 @@ import { EStep } from './GameType';
 
 export const $stepIndex = atom<EStep>({
   key: 'stepIndex',
-  default: EStep.START,
+  default: EStep.READY,
 });

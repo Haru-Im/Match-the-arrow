@@ -1,7 +1,8 @@
-import { FC, useEffect, useLayoutEffect } from 'react';
+'use client';
+
+import { memo, useEffect, useLayoutEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
-  $currentAnswer,
   $currentScore,
   $currentStep,
   $userAnswer,
@@ -10,24 +11,43 @@ import {
 } from './StartState';
 import { EDirection } from './StartType';
 import { ArrowsMapping } from './StartConst';
+import { $stepIndex } from '../GameState';
+import { EStep } from '../GameType';
+import { useTimer } from 'use-timer';
+
 type IStartScreenProps = {};
 
-export const StartScreen: FC<IStartScreenProps> = ({}) => {
-  const [currentAnswer, setCurrentAnswer] = useRecoilState($currentAnswer);
+export const StartScreen = memo<IStartScreenProps>(({}) => {
   const [userAnswer, setUserAnswer] = useRecoilState($userAnswer);
   const [currentStep, setCurrentStep] = useRecoilState($currentStep);
   const [currentScore, setCurrentScore] = useRecoilState($currentScore);
   const [userCombo, setUserCombo] = useRecoilState($userCombo);
   const [userMaxCombo, setUserMaxCombo] = useRecoilState($userMaxCombo);
+  const [gameStep, setGameStep] = useRecoilState($stepIndex);
 
-  useEffect(() => {
-    console.log('updateStep');
-    const randomNumber = Math.floor(Math.random() * 4);
-    const currentAnswer = Object.keys(EDirection)[randomNumber] as EDirection;
+  const { time } = useTimer({
+    timerType: 'DECREMENTAL',
+    initialTime: 3,
+    step: 1,
+    endTime: 0,
+    autostart: true,
+    onTimeOver: () => {
+      setGameStep(EStep.START);
+    },
+  });
 
-    console.log('useEffect에서 currentAnswer는', currentAnswer);
-    setCurrentAnswer(currentAnswer);
-  }, [currentStep]);
+  const [question, setQuestion] = useState<EDirection[]>([
+    null,
+    null,
+    //@ts-ignore
+    Object.keys(EDirection)[Math.floor(Math.random() * 4)],
+    //@ts-ignore
+    Object.keys(EDirection)[Math.floor(Math.random() * 4)],
+    //@ts-ignore
+    Object.keys(EDirection)[Math.floor(Math.random() * 4)],
+  ]);
+
+  const answer = question[2];
 
   useLayoutEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -38,12 +58,25 @@ export const StartScreen: FC<IStartScreenProps> = ({}) => {
   }, []);
 
   useEffect(() => {
+    //change Question
+    if (currentStep === 1) return;
+    const leftfourquestions = question.slice(1);
+    const newQuestionElement = Object.keys(EDirection)[
+      Math.floor(Math.random() * 4)
+    ] as EDirection;
+    const newQuestions = [...leftfourquestions, newQuestionElement];
+
+    console.log('change');
+    setQuestion(newQuestions);
+  }, [currentStep]);
+
+  useEffect(() => {
     if (!userAnswer) return;
     checkAnswer();
   }, [userAnswer]);
 
   const checkAnswer = () => {
-    if (currentAnswer === userAnswer) {
+    if (answer === userAnswer) {
       console.log('correct');
       addScoreByCombo();
       setUserCombo((prev) => prev + 1);
@@ -90,6 +123,10 @@ export const StartScreen: FC<IStartScreenProps> = ({}) => {
     }
   };
 
+  if (gameStep === EStep.READY) {
+    return <div>{time}</div>;
+  }
+
   return (
     <div
       style={{
@@ -100,7 +137,57 @@ export const StartScreen: FC<IStartScreenProps> = ({}) => {
         alignItems: 'center',
       }}
     >
-      <div>{ArrowsMapping[currentAnswer]}</div>
+      <div style={{ display: 'flex' }}>
+        {question.map((e, i) => {
+          if (!e) {
+            return (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  width: 50,
+                  aspectRatio: 1,
+                  backgroundColor: 'red',
+                  alignItems: 'center',
+                }}
+              ></div>
+            );
+          }
+
+          if (i === 2) {
+            return (
+              <div
+                key={i}
+                style={{
+                  width: 50,
+                  display: 'flex',
+                  aspectRatio: 1,
+                  backgroundColor: 'red',
+                  fontSize: 24,
+                  fontWeight: 800,
+                  alignItems: 'center',
+                }}
+              >
+                {ArrowsMapping[e]}
+              </div>
+            );
+          }
+          return (
+            <div
+              key={i}
+              style={{
+                width: 50,
+                display: 'flex',
+                aspectRatio: 1,
+                backgroundColor: 'red',
+                alignItems: 'center',
+              }}
+            >
+              {ArrowsMapping[e]}
+            </div>
+          );
+        })}
+      </div>
       <div>score: {currentScore}</div>
 
       <div
@@ -118,4 +205,4 @@ export const StartScreen: FC<IStartScreenProps> = ({}) => {
       <div>MaxCombo : {userMaxCombo}</div>
     </div>
   );
-};
+});

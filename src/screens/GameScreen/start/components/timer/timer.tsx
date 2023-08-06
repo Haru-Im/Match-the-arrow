@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { $currentScore } from '../../StartState';
+import { useTimer } from 'use-timer';
+import { $stepIndex } from '../../../GameState';
+import { EStep } from '../../../GameType';
 
 interface Timer {
   showIntro: boolean;
@@ -13,29 +16,20 @@ export const Timer: React.FC<Timer> = ({
   initialTime,
   onTimeUp,
 }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
   const [gaugeWidth, setGaugeWidth] = useState('100%');
+  const [gameStep, setGameStep] = useRecoilState($stepIndex);
   const currentScore = useRecoilValue($currentScore);
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    if (!showIntro) {
-      intervalId = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    }
-
-    return () => clearInterval(intervalId);
-  }, [showIntro]);
-
-  useEffect(() => {
-    setGaugeWidth(`${(timeLeft / initialTime) * 100}%`);
-
-    if (timeLeft === 0) {
-      onTimeUp();
-    }
-  }, [timeLeft, initialTime, onTimeUp]);
+  const { time } = useTimer({
+    timerType: 'DECREMENTAL',
+    initialTime: 60,
+    step: 1,
+    endTime: 0,
+    autostart: gameStep === EStep.START,
+    onTimeOver: () => {
+      setGameStep(EStep.END);
+    },
+  });
 
   return (
     <div
@@ -78,7 +72,7 @@ export const Timer: React.FC<Timer> = ({
             color: 'white',
           }}
         >
-          {timeLeft}
+          {time}
         </div>
       </div>
       <div
