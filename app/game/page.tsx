@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { MainPage } from "../../src";
+import { MainScreen } from '../../src';
 
 export default function Game() {
-  return <MainPage />;
+  return <MainScreen />;
 }

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import "./globals.css";
-import { Inter } from "next/font/google";
-import { ReactQueryProvider, RecoilProvider } from "../src";
+import './globals.css';
+import { Inter } from 'next/font/google';
+import { ReactQueryProvider, RecoilProvider } from '../src';
 
 // 폰트 적용
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { MainPage } from "../src";
+import { MainScreen } from '../src/screens';
 
 export default function Home() {
-  return <MainPage />;
+  return <MainScreen />;
 }
