@@ -20,3 +20,13 @@ export const $currentScore = atom<number>({
   key: 'currentScore',
   default: 0,
 });
+
+export const $userCombo = atom<number>({
+  key: 'userCombo',
+  default: 0,
+});
+
+export const $userMaxCombo = atom<number>({
+  key: 'userMaxCombo',
+  default: 0,
+});
