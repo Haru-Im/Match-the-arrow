@@ -1,7 +1,7 @@
 'use client';
 
-import { MainScreen } from '../../src';
+import { StartScreen } from '../../src/screens/GameScreen/start/StartScreen';
 
 export default function Game() {
-  return <MainScreen />;
+  return <StartScreen />;
 }

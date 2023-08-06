@@ -1,7 +1,16 @@
-export default function LoginLayout({
+export default function GameLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+      }}
+    >
+      {children}
+    </div>
+  );
 }

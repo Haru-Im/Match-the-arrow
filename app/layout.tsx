@@ -16,7 +16,15 @@ export default function RootLayout({
     <html lang="en">
       <RecoilProvider>
         <ReactQueryProvider>
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            <div style={{ backgroundColor: 'gray', padding: '1rem' }}>
+              Match the Arrow
+            </div>
+            <div style={{ display: 'flex', flex: 1 }}>{children}</div>
+            <div style={{ backgroundColor: 'gray', padding: '1rem' }}>
+              Footer
+            </div>
+          </body>
         </ReactQueryProvider>
       </RecoilProvider>
     </html>
