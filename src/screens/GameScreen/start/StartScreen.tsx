@@ -96,6 +96,8 @@ export const StartScreen: FC<IStartScreenProps> = ({}) => {
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <div>{ArrowsMapping[currentAnswer]}</div>

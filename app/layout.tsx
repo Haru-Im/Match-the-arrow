@@ -2,7 +2,8 @@
 
 import './globals.css';
 import { Inter } from 'next/font/google';
-import { ReactQueryProvider, RecoilProvider } from '../src';
+import { AuthProvider, ReactQueryProvider, RecoilProvider } from '../src';
+import { Timer } from '../src/screens/GameScreen/start/components';
 
 // 폰트 적용
 const inter = Inter({ subsets: ['latin'] });
@@ -16,15 +17,39 @@ export default function RootLayout({
     <html lang="en">
       <RecoilProvider>
         <ReactQueryProvider>
-          <body className={inter.className}>
-            <div style={{ backgroundColor: 'gray', padding: '1rem' }}>
-              Match the Arrow
-            </div>
-            <div style={{ display: 'flex', flex: 1 }}>{children}</div>
-            <div style={{ backgroundColor: 'gray', padding: '1rem' }}>
-              Footer
-            </div>
-          </body>
+          <AuthProvider>
+            <body className={inter.className}>
+              <div
+                style={{
+                  backgroundColor: 'gray',
+                  padding: '1rem',
+                  display: 'flex',
+                }}
+              >
+                Match the Arrow
+                <div>
+                  <Timer
+                    showIntro={false}
+                    initialTime={60}
+                    onTimeUp={() => {}}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {children}
+              </div>
+              <div style={{ backgroundColor: 'gray', padding: '1rem' }}>
+                Footer
+              </div>
+            </body>
+          </AuthProvider>
         </ReactQueryProvider>
       </RecoilProvider>
     </html>
